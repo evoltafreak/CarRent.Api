@@ -1,0 +1,424 @@
+openapi: 3.0.0
+info:
+  description: car rent api
+  version: 1.0.0
+  title: OpenAPI car rent
+  license:
+    name: Apache-2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+tags:
+  - name: customer
+    description: Everything about the customers
+  - name: car
+    description: Everything about the cars
+paths:
+  /customer:
+    get:
+      tags:
+        - customer
+      description: Read all customers
+      operationId: readAllCustomers
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerList"
+    put:
+      tags:
+        - customer
+      description: Add a new customer
+      operationId: addCustomer
+      requestBody:
+        $ref: "#/components/requestBodies/Customer"
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Customer not found
+        "405":
+          description: Validation exception
+    post:
+      tags:
+        - customer
+      description: Update an existing customer
+      operationId: updateCustomer
+      requestBody:
+        $ref: "#/components/requestBodies/Customer"
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Customer not found
+        "405":
+          description: Validation exception
+  /customer/{idCustomer}:
+    get:
+      tags:
+        - customer
+      description: Read customer by idCustomer
+      operationId: readCustomerById
+      parameters:
+        - $ref: "#/components/parameters/idCustomer"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+    delete:
+      tags:
+        - customer
+      description: Delete an existing customer
+      operationId: deleteCustomerById
+      parameters:
+        - $ref: "#/components/parameters/idCustomer"
+      responses:
+        "400":
+          description: Invalid customer value
+          
+  /car:
+    get:
+      tags:
+        - car
+      description: Read all cars
+      operationId: readAllCars
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CarList"
+    put:
+      tags:
+        - car
+      description: Add a new car
+      operationId: addCar
+      requestBody:
+        $ref: "#/components/requestBodies/Car"
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Car not found
+        "405":
+          description: Validation exception
+    post:
+      tags:
+        - car
+      description: Update an existing car
+      operationId: updateCar
+      requestBody:
+        $ref: "#/components/requestBodies/Car"
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Car not found
+        "405":
+          description: Validation exception
+  /car/{idCar}:
+    get:
+      tags:
+        - car
+      description: Read car by idCar
+      operationId: readCarById
+      parameters:
+        - $ref: "#/components/parameters/idCar"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Car"
+    delete:
+      tags:
+        - car
+      description: Delete an existing car
+      operationId: deleteCarById
+      parameters:
+        - $ref: "#/components/parameters/idCar"
+      responses:
+        "400":
+          description: Invalid car value     
+  /car/carType:
+    get:
+      tags:
+        - car
+      description: Read all car types
+      operationId: readAllCarTypes
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CarTypeList"
+  /car/carMake:
+    get:
+      tags:
+        - car
+      description: Read all car makes
+      operationId: readAllCarMakes
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CarMakeList" 
+
+  /reservation:
+    get:
+      tags:
+        - reservation
+      description: Read all reservation
+      operationId: readAllReservation
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReservationList"
+    put:
+      tags:
+        - reservation
+      description: Add a new reservation
+      operationId: addReservation
+      requestBody:
+        $ref: "#/components/requestBodies/Reservation"
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Reservation not found
+        "405":
+          description: Validation exception
+    post:
+      tags:
+        - reservation
+      description: Update an existing reservation
+      operationId: updateReservation
+      requestBody:
+        $ref: "#/components/requestBodies/Reservation"
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Reservation not found
+        "405":
+          description: Validation exception
+  /reservation/{idReservation}:
+    get:
+      tags:
+        - reservation
+      description: Read reservation by idReservation
+      operationId: readReservationById
+      parameters:
+        - $ref: "#/components/parameters/idReservation"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+    delete:
+      tags:
+        - reservation
+      description: Delete an existing reservation
+      operationId: deleteReservationById
+      parameters:
+        - $ref: "#/components/parameters/idReservation"
+      responses:
+        "400":
+          description: Invalid reservation value               
+servers:
+  - url: https://localhost:44363/api
+components:
+  requestBodies:
+    Customer:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Customer"
+      description: Customer object
+      required: true
+    Car:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Car"
+      description: Car object
+      required: true  
+    Reservation:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Reservation"
+      description: Reservation object
+      required: true  
+  schemas:
+    Place:
+      title: a place class
+      description: A place class
+      type: object
+      properties:
+        idPlace:
+          type: integer
+          format: int64
+        zipCode :
+          type: string
+        place :
+          type: string
+        canton :
+          type: string
+        cantonAbb :
+          type: string
+    Customer:
+      title: a customer
+      description: A customer
+      type: object
+      properties:
+        idCustomer:
+          type: integer
+          format: int64
+        firstname:
+          type: string
+        lastname:
+          type: string
+        address:
+          type: string
+        addressNr:
+          type: string
+        place:
+          $ref: "#/components/schemas/Place"  
+    CustomerList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Customer"
+    CarType:
+      title: a car type class
+      description: A car type class
+      type: object
+      properties:
+        idCarType:
+          type: integer
+          format: int64
+        carType :
+          type: string
+    CarTypeList:
+      type: array
+      items:
+        $ref: "#/components/schemas/CarType"        
+    CarMake:
+      title: a car make class
+      description: A car make class
+      type: object
+      properties:
+        idCarMake:
+          type: integer
+          format: int64
+        carMake :
+          type: string         
+    CarMakeList:
+      type: array
+      items:
+        $ref: "#/components/schemas/CarMake"
+    CarClass:
+      title: a car class class
+      description: A car class class
+      type: object
+      properties:
+        idCarClass:
+          type: integer
+          format: int64
+        carClass :
+          type: string   
+        fee:
+          type: number          
+    CarClassList:
+      type: array
+      items:
+        $ref: "#/components/schemas/CarClass"       
+    Car:
+      title: a car
+      description: A car
+      type: object
+      properties:
+        idCar:
+          type: integer
+          format: int64
+        carMake:
+          $ref: '#/components/schemas/CarMake'  
+        carName:
+          type: string  
+        carNr:
+          type: string   
+        carType:
+          $ref: '#/components/schemas/CarType'  
+        carClass:
+          $ref: '#/components/schemas/CarClass'  
+    CarList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Car"      
+    Reservation:
+      title: a reservation
+      description: A reservation
+      type: object
+      properties:
+        idReservation:
+          type: integer
+          format: int64
+        car:
+          $ref: '#/components/schemas/Car'
+        days:
+          type: integer
+        price:
+          type: number
+        reservationNr:
+          type: string
+        pickUpDate:
+          type: string
+          format: date-time
+        isLease:
+          type: boolean
+        customer:
+          $ref: '#/components/schemas/Customer'
+        car:
+          $ref: '#/components/schemas/Car'  
+    ReservationList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Reservation"           
+  parameters:
+    idCustomer:
+      name: idCustomer
+      description: The id of the customer
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    idCar:
+      name: idCar
+      description: The id of the car
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64  
+    idReservation:
+      name: idReservation
+      description: The id of the reservation
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64     

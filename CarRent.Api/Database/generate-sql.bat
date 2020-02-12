@@ -1,0 +1,1 @@
+type DDL.sql DML.sql VW_CARS.sql VW_CUSTOMER.sql VW_RESERVATION.sql > DB.sql

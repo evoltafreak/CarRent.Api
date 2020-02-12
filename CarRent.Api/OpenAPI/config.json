@@ -1,0 +1,6 @@
+{
+	"buildTarget": "library",
+	"packageTitle": "Car Rent",
+	"packageName": "OpenAPI",
+	"sourceFolder": "../"
+}
