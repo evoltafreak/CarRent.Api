@@ -25,8 +25,8 @@ namespace CarRent.Api.Controllers
 
         public override IActionResult DeleteReservationById(long idReservation)
         {
-            this._reservationService.DeleteReservationById(idReservation);
-            return StatusCode(200);
+            int deleted = _reservationService.DeleteReservationById(idReservation);
+            return StatusCode(200, deleted);
         }
 
         public override IActionResult ReadAllReservation()
@@ -38,13 +38,13 @@ namespace CarRent.Api.Controllers
         public override IActionResult ReadReservationById(long idReservation)
         {
             Reservation reservation = _reservationService.ReadReservationById(idReservation);
-            return new ObjectResult(reservation);
+            return reservation == null ? StatusCode(404, reservation) : StatusCode(200, reservation);
         }
 
         public override IActionResult UpdateReservation(Reservation reservation)
         {
-            _reservationService.UpdateReservation(reservation);
-            return StatusCode(200);
+            long idReservation = _reservationService.UpdateReservation(reservation);
+            return StatusCode(200, idReservation);
         }
     }
 }

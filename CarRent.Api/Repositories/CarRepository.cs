@@ -40,22 +40,21 @@ namespace CarRent.Api.Repositories
         public long AddCar(Car car)
         {
             IMapper mapper = carConfig2.CreateMapper();
-            CarEntity carEntity = new CarEntity();
+            CarEntity carEntity = mapper.Map<Car, CarEntity>(car);
             using (var context = new CarRentDbContext())
             {
-                carEntity = mapper.Map<Car, CarEntity>(car);
                 context.CarEntity.Add(carEntity);
                 context.SaveChanges();
             }
             return carEntity.IdCar;
         }
 
-        public void DeleteCarById(long idCar)
+        public int DeleteCarById(long idCar)
         {
             using (var context = new CarRentDbContext())
             {
                 context.CarEntity.Remove(context.CarEntity.Single(c => c.IdCar == idCar));
-                context.SaveChanges();
+                return context.SaveChanges();
             }
         }
 
@@ -83,14 +82,16 @@ namespace CarRent.Api.Repositories
             return mapper.Map<CarEntity, Car>(carEntity);
         }
 
-        public void UpdateCar(Car car)
+        public long UpdateCar(Car car)
         {
             IMapper mapper = carConfig2.CreateMapper();
+            CarEntity carEntity = mapper.Map<Car, CarEntity>(car);
             using (var context = new CarRentDbContext())
             {
-                context.CarEntity.Update(mapper.Map<Car, CarEntity>(car));
+                context.CarEntity.Update(carEntity);
                 context.SaveChanges();
             }
+            return carEntity.IdCar;
         }
         
         public CarType ReadCarTypeById(long idCarType)

@@ -6,10 +6,10 @@ namespace CarRent.Api.Repositories
     public interface ICarRepository
     {
         long AddCar(Car car);
-        void DeleteCarById(long idCar);
+        int DeleteCarById(long idCar);
         List<Car> ReadAllCars();
         Car ReadCarById(long idCar);
-        void UpdateCar(Car car);
+        long UpdateCar(Car car);
         CarType ReadCarTypeById(long idCarType);
         List<CarType> ReadAllCarTypes();
         CarMake ReadCarMakeById(long idCarMake);

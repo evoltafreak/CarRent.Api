@@ -21,22 +21,21 @@ namespace CarRent.Api.Repositories
         public long AddCustomer(Customer customer)
         {
             IMapper mapper = _customerConfig2.CreateMapper();
-            CustomerEntity customerEntity = new CustomerEntity();
+            CustomerEntity customerEntity = mapper.Map<Customer, CustomerEntity>(customer);
             using (var context = new CarRentDbContext())
             {
-                customerEntity = mapper.Map<Customer, CustomerEntity>(customer);
                 context.CustomerEntity.Add(customerEntity);
                 context.SaveChanges();
             }
             return customerEntity.IdCustomer;
         }
 
-        public void DeleteCustomerById(long idCustomer)
+        public int DeleteCustomerById(long idCustomer)
         {
             using (var context = new CarRentDbContext())
             {
                 context.CustomerEntity.Remove(context.CustomerEntity.Single(c => c.IdCustomer == idCustomer));
-                context.SaveChanges();
+                return context.SaveChanges();
             }
         }
 
@@ -66,14 +65,17 @@ namespace CarRent.Api.Repositories
             return mapper.Map<CustomerEntity, Customer>(customerEntity);
         }
 
-        public void UpdateCustomer(Customer customer)
+        public long UpdateCustomer(Customer customer)
         {
             IMapper mapper = _customerConfig2.CreateMapper();
+            CustomerEntity customerEntity = mapper.Map<Customer, CustomerEntity>(customer);
             using (var context = new CarRentDbContext())
             {
-                context.CustomerEntity.Update(mapper.Map<Customer, CustomerEntity>(customer));
+                context.CustomerEntity.Update(customerEntity);
                 context.SaveChanges();
             }
+
+            return customerEntity.IdCustomer;
         }
 
     }

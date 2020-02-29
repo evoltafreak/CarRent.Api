@@ -26,8 +26,8 @@ namespace CarRent.Api.Controllers
 
         public override IActionResult DeleteCustomerById(long idCustomer)
         {
-            _customerService.DeleteByCustomerId(idCustomer);
-            return StatusCode(200);
+            int deleted = _customerService.DeleteByCustomerId(idCustomer);
+            return StatusCode(200, deleted);
         }
 
         public override IActionResult ReadAllCustomers()
@@ -44,8 +44,8 @@ namespace CarRent.Api.Controllers
 
         public override IActionResult UpdateCustomer(Customer customer)
         {
-            _customerService.UpdateCustomer(customer);
-            return StatusCode(200, customer.IdCustomer);
+            long idCustomer = _customerService.UpdateCustomer(customer);
+            return StatusCode(200, idCustomer);
         }
     }
 }

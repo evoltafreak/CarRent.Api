@@ -40,12 +40,12 @@ namespace CarRent.Api.Repositories
             return reservationEntity.IdReservation;
         }
 
-        public void DeleteReservationById(long idReservation)
+        public int DeleteReservationById(long idReservation)
         {
             using (var context = new CarRentDbContext())
             {
                 context.ReservationEntity.Remove(context.ReservationEntity.Single(r => r.IdReservation == idReservation));
-                context.SaveChanges();
+                return context.SaveChanges();
             }
         }
 
@@ -74,14 +74,17 @@ namespace CarRent.Api.Repositories
             return mapper.Map<ReservationEntity, Reservation>(reservationEntity);
         }
 
-        public void UpdateReservation(Reservation reservation)
+        public long UpdateReservation(Reservation reservation)
         {
             IMapper mapper = reservationConfig2.CreateMapper();
+            ReservationEntity reservationEntity = mapper.Map<Reservation, ReservationEntity>(reservation);
             using (var context = new CarRentDbContext())
             {
-                context.ReservationEntity.Update(mapper.Map<Reservation, ReservationEntity>(reservation));
+                context.ReservationEntity.Update(reservationEntity);
                 context.SaveChanges();
             }
+
+            return reservationEntity.IdReservation;
         }
 
     }

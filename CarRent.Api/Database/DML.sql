@@ -4126,7 +4126,7 @@ INSERT INTO CARRENT.CarType (carType) VALUES ('Limousine');
 INSERT INTO CARRENT.CarType (carType) VALUES ('Combi');
 
 -- CarMake
-INSERT INTO CARRENT.CarMake (carMake) VALUES ('Mitusbishi');
+INSERT INTO CARRENT.CarMake (carMake) VALUES ('Mitsubishi');
 INSERT INTO CARRENT.CarMake (carMake) VALUES ('Subaru');
 
 -- CarClass

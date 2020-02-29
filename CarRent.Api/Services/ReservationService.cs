@@ -25,9 +25,9 @@ namespace CarRent.Api.Services
             return _reservationRepository.AddReservation(reservation);
         }
 
-        public void DeleteReservationById(long idReservation)
+        public int DeleteReservationById(long idReservation)
         {
-            _reservationRepository.DeleteReservationById(idReservation);
+            return _reservationRepository.DeleteReservationById(idReservation);
         }
 
         public List<Reservation> ReadAllReservation()
@@ -50,9 +50,9 @@ namespace CarRent.Api.Services
             return reservation;
         }
 
-        public void UpdateReservation(Reservation reservation)
+        public long UpdateReservation(Reservation reservation)
         {
-            _reservationRepository.UpdateReservation(reservation);
+            return _reservationRepository.UpdateReservation(reservation);
         }
     }
 }

@@ -23,8 +23,8 @@ namespace CarRent.Api.Controllers
 
         public override IActionResult DeleteCarById(long idCar)
         {
-            _carService.DeleteCarById(idCar);
-            return StatusCode(200);
+            int deleted = _carService.DeleteCarById(idCar);
+            return StatusCode(200, deleted);
         }
 
         public override IActionResult ReadAllCarMakes()
@@ -54,13 +54,13 @@ namespace CarRent.Api.Controllers
         public override IActionResult ReadCarById(long idCar)
         {
             Car car = _carService.ReadCarById(idCar);
-            return StatusCode(200, car);
+            return car == null ? StatusCode(404, car) : StatusCode(200, car);
         }
 
         public override IActionResult UpdateCar(Car car)
         {
-            _carService.UpdateCar(car);
-            return StatusCode(200);
+            long idCar = _carService.UpdateCar(car);
+            return StatusCode(200, idCar);
         }
     }
 }

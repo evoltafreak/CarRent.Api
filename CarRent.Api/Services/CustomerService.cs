@@ -21,9 +21,9 @@ namespace CarRent.Api.Services
             return _customerRepository.AddCustomer(customer);
         }
 
-        public void DeleteByCustomerId(long idCar)
+        public int DeleteByCustomerId(long idCar)
         {
-            _customerRepository.DeleteCustomerById(idCar);
+            return _customerRepository.DeleteCustomerById(idCar);
         }
 
         public List<Customer> ReadAllCustomer()
@@ -47,9 +47,9 @@ namespace CarRent.Api.Services
             return customer;
         }
 
-        public void UpdateCustomer(Customer customer)
+        public long UpdateCustomer(Customer customer)
         {
-            _customerRepository.UpdateCustomer(customer);
+            return _customerRepository.UpdateCustomer(customer);
         }
     }
 }

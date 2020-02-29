@@ -19,9 +19,9 @@ namespace CarRent.Api.Services
             return _carRepository.AddCar(car);
         }
 
-        public void DeleteCarById(long idCar)
+        public int DeleteCarById(long idCar)
         {
-            _carRepository.DeleteCarById(idCar);
+            return _carRepository.DeleteCarById(idCar);
         }
 
 
@@ -47,9 +47,9 @@ namespace CarRent.Api.Services
             return car;
         }
 
-        public void UpdateCar(Car car)
+        public long UpdateCar(Car car)
         {
-            _carRepository.UpdateCar(car);
+            return _carRepository.UpdateCar(car);
         }
 
         public List<CarType> ReadAllCarTypes()
