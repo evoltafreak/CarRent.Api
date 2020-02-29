@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CarRent.Api.EF
 {
-    [Table(("reservation"))]
+    [Table("reservation")]
     public class ReservationEntity
     {
         [Key]

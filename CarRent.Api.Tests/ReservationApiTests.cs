@@ -86,17 +86,16 @@ namespace CarRent.Api.IntegrationTests
 
         private Reservation mockReservation()
         {
-            Reservation reservation = new Reservation();
-            reservation.Days = 10;
-            reservation.Price = 1000;
-            reservation.IsLease = true;
-            reservation.ReservationNr = "XYZ123";
-            reservation.PickUpDate = DateTime.Now;
-            reservation.Car = new Car();
-            reservation.Car.IdCar = 1;
-            reservation.Customer = new Customer();
-            reservation.Customer.IdCustomer = 1;
-            return reservation;
+            return new Reservation
+            {
+                Days = 10,
+                Price = 1000,
+                IsLease = true,
+                ReservationNr = "XYZ123",
+                PickUpDate = DateTime.Now,
+                Car = new Car {IdCar = 1},
+                Customer = new Customer {IdCustomer = 1}
+            };
         }
 
     }

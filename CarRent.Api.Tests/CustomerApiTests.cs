@@ -85,14 +85,14 @@ namespace CarRent.Api.IntegrationTests
 
         private Customer mockCustomer()
         {
-            Customer customer = new Customer();
-            customer.Firstname = "Max";
-            customer.Lastname = "Mustermann";
-            customer.Address = "Musterstrasse";
-            customer.AddressNr = "1a";
-            customer.Place = new Place();
-            customer.Place.IdPlace = 1;
-            return customer;
+            return new Customer
+            {
+                Firstname = "Max",
+                Lastname = "Mustermann",
+                Address = "Musterstrasse",
+                AddressNr = "1a",
+                Place = new Place {IdPlace = 1}
+            };
         }
         
     }

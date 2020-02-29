@@ -127,16 +127,14 @@ namespace CarRent.Api.IntegrationTests
         
         private Car mockCar()
         {
-            Car car = new Car();
-            car.CarName = "Colt";
-            car.CarNr = "XYZ";
-            car.CarType = new CarType();
-            car.CarType.IdCarType = 1;
-            car.CarMake = new CarMake();
-            car.CarMake.IdCarMake = 1;
-            car.CarClass = new CarClass();
-            car.CarClass.IdCarClass = 1;
-            return car;
+            return new Car
+            {
+                CarName = "Colt",
+                CarNr = "XYZ",
+                CarType = new CarType {IdCarType = 1},
+                CarMake = new CarMake {IdCarMake = 1},
+                CarClass = new CarClass {IdCarClass = 1}
+            };
         }
 
     }
