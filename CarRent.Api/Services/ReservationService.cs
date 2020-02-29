@@ -1,5 +1,6 @@
 ﻿using OpenAPI.Models;
 using System.Collections.Generic;
+using CarRent.Api.Repositories;
 
 namespace CarRent.Api.Services
 {
@@ -7,15 +8,21 @@ namespace CarRent.Api.Services
     {
 
         private readonly IReservationRepository _reservationRepository;
+        private readonly ICustomerRepository _customerRepository;
+        private readonly ICarRepository _carRepository;
 
-        public ReservationService(IReservationRepository reservationRepository)
+        public ReservationService(IReservationRepository reservationRepository,
+            ICustomerRepository customerRepository,
+            ICarRepository carRepository)
         {
-            this._reservationRepository = reservationRepository;
+            _reservationRepository = reservationRepository;
+            _customerRepository = customerRepository;
+            _carRepository = carRepository;
         }
 
-        public void AddReservation(Reservation reservation)
+        public long AddReservation(Reservation reservation)
         {
-            _reservationRepository.AddReservation(reservation);
+            return _reservationRepository.AddReservation(reservation);
         }
 
         public void DeleteReservationById(long idReservation)
@@ -25,12 +32,22 @@ namespace CarRent.Api.Services
 
         public List<Reservation> ReadAllReservation()
         {
-            return _reservationRepository.ReadAllReservation();
+            List<Reservation> reservationList = _reservationRepository.ReadAllReservation();
+            foreach(Reservation reservation in reservationList)
+            {
+                reservation.Customer = _customerRepository.ReadCustomerById(reservation.Customer.IdCustomer);
+                reservation.Car = _carRepository.ReadCarById(reservation.Car.IdCar);
+            }
+
+            return reservationList;
         }
 
         public Reservation ReadReservationById(long idReservation)
         {
-            return _reservationRepository.ReadReservationById(idReservation);
+            Reservation reservation = _reservationRepository.ReadReservationById(idReservation);
+            reservation.Customer = _customerRepository.ReadCustomerById(reservation.Customer.IdCustomer);
+            reservation.Car = _carRepository.ReadCarById(reservation.Car.IdCar);
+            return reservation;
         }
 
         public void UpdateReservation(Reservation reservation)

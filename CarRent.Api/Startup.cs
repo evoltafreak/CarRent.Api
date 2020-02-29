@@ -1,8 +1,10 @@
-﻿using CarRent.Api.Repositories;
+﻿using CarRent.Api.EF;
+using CarRent.Api.Repositories;
 using CarRent.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,11 +25,13 @@ namespace CarRent.Api
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddTransient<ICarService, CarService>();
             services.AddTransient<ICustomerService, CustomerService>();
-            services.AddTransient<IReservationService, ReservationService> ();
+            services.AddTransient<IReservationService, ReservationService>();
+            services.AddTransient<IPlaceService, PlaceService>();
             services.AddTransient<ICarRepository, CarRepository>();
             services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddTransient<IReservationRepository, ReservationRepository>();
-            //services.AddDbContext(options => options.UseMySQL("Server=localhost; database=carrent; UID=root; password=admin"));
+            services.AddTransient<IPlaceRepository, PlaceRepository>();
+            services.AddDbContext<CarRentDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

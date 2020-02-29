@@ -171,7 +171,19 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CarMakeList" 
-
+  /car/carClass:
+    get:
+      tags:
+        - car
+      description: Read all car classes
+      operationId: readAllCarClasses
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CarClassList"
   /reservation:
     get:
       tags:
@@ -237,7 +249,35 @@ paths:
         - $ref: "#/components/parameters/idReservation"
       responses:
         "400":
-          description: Invalid reservation value               
+          description: Invalid reservation value  
+  /place:
+    get:
+      tags:
+        - place
+      description: Read all places
+      operationId: readAllPlaces
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlaceList"        
+  /place/{idPlace}:
+    get:
+      tags:
+        - place
+      description: Read place by idPlace
+      operationId: readPlaceById
+      parameters:
+        - $ref: "#/components/parameters/idPlace"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Place"        
 servers:
   - url: https://localhost:44363/api
 components:
@@ -280,6 +320,10 @@ components:
           type: string
         cantonAbb :
           type: string
+    PlaceList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Place"      
     Customer:
       title: a customer
       description: A customer
@@ -391,8 +435,6 @@ components:
           type: boolean
         customer:
           $ref: '#/components/schemas/Customer'
-        car:
-          $ref: '#/components/schemas/Car'  
     ReservationList:
       type: array
       items:
@@ -422,3 +464,11 @@ components:
       schema:
         type: integer
         format: int64     
+    idPlace:
+      name: idPlace
+      description: The id of the place
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64         

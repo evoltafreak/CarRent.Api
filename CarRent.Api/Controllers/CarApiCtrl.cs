@@ -3,6 +3,7 @@ using CarRent.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using OpenAPI.Controllers;
 using OpenAPI.Models;
+using Car = OpenAPI.Models.Car;
 
 namespace CarRent.Api.Controllers
 {
@@ -16,8 +17,8 @@ namespace CarRent.Api.Controllers
 
         public override IActionResult AddCar(Car car)
         {
-            _carService.AddCar(car);
-            return StatusCode(200);
+            long idCar = _carService.AddCar(car);
+            return StatusCode(200, idCar);
         }
 
         public override IActionResult DeleteCarById(long idCar)
@@ -36,6 +37,12 @@ namespace CarRent.Api.Controllers
         {
             List<CarType> carTypeList = _carService.ReadAllCarTypes();
             return StatusCode(200, carTypeList);
+        }
+
+        public override IActionResult ReadAllCarClasses()
+        {
+            List<CarClass> carClassList = _carService.ReadAllCarClasses();
+            return StatusCode(200, carClassList);
         }
 
         public override IActionResult ReadAllCars()

@@ -19,8 +19,8 @@ namespace CarRent.Api.Controllers
 
         public override IActionResult AddReservation(Reservation reservation)
         {
-            _reservationService.AddReservation(reservation);
-            return StatusCode(200);
+            long idReservation = _reservationService.AddReservation(reservation);
+            return StatusCode(200, idReservation);
         }
 
         public override IActionResult DeleteReservationById(long idReservation)

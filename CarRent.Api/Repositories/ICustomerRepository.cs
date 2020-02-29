@@ -5,7 +5,7 @@ namespace CarRent.Api.Repositories
 {
     public interface ICustomerRepository
     {
-        void AddCustomer(Customer customer);
+        long AddCustomer(Customer customer);
         void DeleteCustomerById(long idCustomer);
         List<Customer> ReadAllCustomer();
         Customer ReadCustomerById(long idCustomer);

@@ -1,5 +1,9 @@
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.DataCollection;
 
 namespace CarRent.Api.IntegrationTests
 {
@@ -11,7 +15,13 @@ namespace CarRent.Api.IntegrationTests
         
         protected IntegrationTests()
         {
-            var appFactory = new WebApplicationFactory<Startup>();
+            var appFactory = new WebApplicationFactory<Startup>()
+                .WithWebHostBuilder(builder => { builder.ConfigureServices(services =>
+                    {
+                        services.RemoveAll(typeof(DbContext));
+                        services.AddDbContext<DbContext>(options => { options.UseInMemoryDatabase("TestDb"); });
+                    });
+                });
             TestClient = appFactory.CreateClient();
         }
 

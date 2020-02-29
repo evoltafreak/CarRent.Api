@@ -8,15 +8,17 @@ namespace CarRent.Api.Services
     {
 
         private readonly ICustomerRepository _customerRepository;
+        private readonly IPlaceRepository _placeRepository;
 
-        public CustomerService(ICustomerRepository customerRepository)
+        public CustomerService(ICustomerRepository customerRepository, IPlaceRepository placeRepository)
         {
             _customerRepository = customerRepository;
+            _placeRepository = placeRepository;
         }
 
-        public void AddCustomer(Customer customer)
+        public long AddCustomer(Customer customer)
         {
-            _customerRepository.AddCustomer(customer);
+            return _customerRepository.AddCustomer(customer);
         }
 
         public void DeleteByCustomerId(long idCar)
@@ -26,12 +28,23 @@ namespace CarRent.Api.Services
 
         public List<Customer> ReadAllCustomer()
         {
-            return _customerRepository.ReadAllCustomer();
+            List<Customer> customerList =  _customerRepository.ReadAllCustomer();
+            foreach(Customer customer in customerList)
+            {
+                customer.Place = _placeRepository.ReadPlaceById(customer.Place.IdPlace);
+            }
+
+            return customerList;
         }
 
         public Customer ReadCustomerById(long idCar)
         {
-            return _customerRepository.ReadCustomerById(idCar);
+            Customer customer = _customerRepository.ReadCustomerById(idCar);
+            if (customer != null)
+            {
+                customer.Place = _placeRepository.ReadPlaceById(customer.Place.IdPlace);
+            }
+            return customer;
         }
 
         public void UpdateCustomer(Customer customer)

@@ -14,9 +14,9 @@ namespace CarRent.Api.Services
             this._carRepository = carRepository;
         }
 
-        public void AddCar(Car car)
+        public long AddCar(Car car)
         {
-            _carRepository.AddCar(car);
+            return _carRepository.AddCar(car);
         }
 
         public void DeleteCarById(long idCar)
@@ -27,12 +27,24 @@ namespace CarRent.Api.Services
 
         public List<Car> ReadAllCars()
         {
-            return _carRepository.ReadAllCars();
+            List<Car> carList = _carRepository.ReadAllCars();
+            foreach (Car car in carList)
+            {
+                car.CarType = _carRepository.ReadCarTypeById(car.CarType.IdCarType);
+                car.CarMake = _carRepository.ReadCarMakeById(car.CarMake.IdCarMake);
+                car.CarClass = _carRepository.ReadCarClassById(car.CarClass.IdCarClass);
+            }
+
+            return carList;
         }
 
         public Car ReadCarById(long idCar)
         {
-            return _carRepository.ReadCarById(idCar);
+            Car car = _carRepository.ReadCarById(idCar);
+            car.CarType = _carRepository.ReadCarTypeById(car.CarType.IdCarType);
+            car.CarMake = _carRepository.ReadCarMakeById(car.CarMake.IdCarMake);
+            car.CarClass = _carRepository.ReadCarClassById(car.CarClass.IdCarClass);
+            return car;
         }
 
         public void UpdateCar(Car car)
@@ -49,5 +61,11 @@ namespace CarRent.Api.Services
         {
             return _carRepository.ReadAllCarMakes();
         }
+        
+        public List<CarClass> ReadAllCarClasses()
+        {
+            return _carRepository.ReadAllCarClasses();
+        }
+        
     }
 }

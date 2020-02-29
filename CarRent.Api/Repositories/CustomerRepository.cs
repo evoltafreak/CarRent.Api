@@ -1,115 +1,79 @@
-﻿using MySql.Data.MySqlClient;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
+using CarRent.Api.EF;
 using OpenAPI.Models;
 
 namespace CarRent.Api.Repositories
 {
     public class CustomerRepository : ICustomerRepository
     {
-
-        public DBConnection DbConnection;
-
+        private MapperConfiguration _customerConfig;
+        private MapperConfiguration _customerConfig2;
         public CustomerRepository()
         {
-            DbConnection = DBConnection.Instance();
+            _customerConfig = new MapperConfiguration(cfg => cfg.CreateMap<CustomerEntity, Customer>()
+                .ForPath(dest => dest.Place.IdPlace, act => act.MapFrom(src => src.FidPlace)));
+            _customerConfig2 = new MapperConfiguration(cfg => cfg.CreateMap<Customer, CustomerEntity>()
+                .ForMember(dest => dest.FidPlace, act => act.MapFrom(src => src.Place.IdPlace)));
         }
 
-        public void AddCustomer(Customer customer)
+        public long AddCustomer(Customer customer)
         {
-            DbConnection.Connect();
-            string query = "INSERT INTO (firstname, lastname, address, addressNr, fidPlace) VALUES (@firstname, @lastname, @address, @addressNr, @fidPlace)";
-            MySqlCommand cmd = new MySqlCommand(query, DbConnection.Connection);
-            cmd.Parameters.AddWithValue("@firstname", customer.Firstname);
-            cmd.Parameters.AddWithValue("@lastname", customer.Lastname);
-            cmd.Parameters.AddWithValue("@address", customer.Address);
-            cmd.Parameters.AddWithValue("@addressNr", customer.AddressNr);
-            cmd.Parameters.AddWithValue("@fidPlace", customer.Place.IdPlace);
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
-            DbConnection.Close();
+            IMapper mapper = _customerConfig2.CreateMapper();
+            CustomerEntity customerEntity = new CustomerEntity();
+            using (var context = new CarRentDbContext())
+            {
+                customerEntity = mapper.Map<Customer, CustomerEntity>(customer);
+                context.CustomerEntity.Add(customerEntity);
+                context.SaveChanges();
+            }
+            return customerEntity.IdCustomer;
         }
 
         public void DeleteCustomerById(long idCustomer)
         {
-            DbConnection.Connect();
-            string query = "DELETE FROM Customer WHERE idCustomer = @idCustomer";
-            MySqlCommand cmd = new MySqlCommand(query, DbConnection.Connection);
-            cmd.Parameters.AddWithValue("@idCustomer", idCustomer);
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
-            DbConnection.Close();
+            using (var context = new CarRentDbContext())
+            {
+                context.CustomerEntity.Remove(context.CustomerEntity.Single(c => c.IdCustomer == idCustomer));
+                context.SaveChanges();
+            }
         }
 
 
         public List<Customer> ReadAllCustomer()
         {
-            List<Customer> customerList = new List<Customer>();
-            DbConnection.Connect();
-
-            string query = "SELECT * FROM VW_CUSTOMER";
-            var cmd = new MySqlCommand(query, DbConnection.Connection);
-            var reader = cmd.ExecuteReader();
-           
-            while (reader.Read())
+            List<CustomerEntity> customerList = new List<CustomerEntity>();
+            using (var context = new CarRentDbContext())
             {
-                Customer customer = new Customer();
-                customer.IdCustomer = reader.GetInt32(0);
-                customer.Firstname = reader.GetString(1);
-                customer.Lastname = reader.GetString(2);
-                customer.Address = reader.GetString(3);
-                customer.AddressNr = reader.GetString(4);
-                Place place = new Place();
-                place.IdPlace = reader.GetInt32(5);
-                place.ZipCode = reader.GetString(6);
-                place._Place = reader.GetString(7);
-                customer.Place = place;
-                customerList.Add(customer);
+                customerList = context.CustomerEntity.ToList();
             }
-            DbConnection.Close();
-            return customerList;
+            
+            IMapper mapper = _customerConfig.CreateMapper();
+            List<Customer> customers = mapper.Map<List<CustomerEntity>, List<Customer>>(customerList);
+            return customers;
         }
 
         public Customer ReadCustomerById(long idCustomer)
         {
-            Customer customer = new Customer();
-            DbConnection.Connect();
-
-            string query = "SELECT * FROM VW_CUSTOMER WHERE idCustomer = @idCustomer";
-            MySqlCommand cmd = new MySqlCommand(query, DbConnection.Connection);
-            cmd.Parameters.AddWithValue("@idCustomer", idCustomer);
-            cmd.Prepare();
-            var reader = cmd.ExecuteReader();
-
-            while (reader.Read())
+            CustomerEntity customerEntity = new CustomerEntity();
+            using (var context = new CarRentDbContext())
             {
-                customer.IdCustomer = reader.GetInt32(0);
-                customer.Firstname = reader.GetString(1);
-                customer.Lastname = reader.GetString(2);
-                customer.Address = reader.GetString(3);
-                customer.AddressNr = reader.GetString(4);
-                Place place = new Place();
-                place.IdPlace = reader.GetInt32(5);
-                place.ZipCode = reader.GetString(6);
-                place._Place = reader.GetString(7);
-                customer.Place = place;
+                customerEntity = context.CustomerEntity.FirstOrDefault(c => c.IdCustomer == idCustomer);
             }
-            DbConnection.Close();
-            return customer;
+            
+            IMapper mapper = _customerConfig.CreateMapper();
+            return mapper.Map<CustomerEntity, Customer>(customerEntity);
         }
 
         public void UpdateCustomer(Customer customer)
         {
-            DbConnection.Connect();
-            string query = "UPDATE Customer SET firstname = @firstname, lastname = @lastname, address = @address, addressNr = @addressNr, fidPlace = @fidPlace WHERE idCustomer = @idCustomer";
-            MySqlCommand cmd = new MySqlCommand(query, DbConnection.Connection);
-            cmd.Parameters.AddWithValue("@firstname", customer.Firstname);
-            cmd.Parameters.AddWithValue("@lastname", customer.Lastname);
-            cmd.Parameters.AddWithValue("@address", customer.Address);
-            cmd.Parameters.AddWithValue("@addressNr", customer.AddressNr);
-            cmd.Parameters.AddWithValue("@fidPlace", customer.Place.IdPlace);
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
-            DbConnection.Close();
+            IMapper mapper = _customerConfig2.CreateMapper();
+            using (var context = new CarRentDbContext())
+            {
+                context.CustomerEntity.Update(mapper.Map<Customer, CustomerEntity>(customer));
+                context.SaveChanges();
+            }
         }
 
     }

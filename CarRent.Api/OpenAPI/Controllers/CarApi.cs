@@ -51,6 +51,17 @@ namespace OpenAPI.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Read all car classes</remarks>
+        /// <response code="200">successful operation</response>
+        [HttpGet]
+        [Route("/api/car/carClass")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(List<CarClass>))]
+        public abstract IActionResult ReadAllCarClasses();
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Read all car makes</remarks>
         /// <response code="200">successful operation</response>
         [HttpGet]

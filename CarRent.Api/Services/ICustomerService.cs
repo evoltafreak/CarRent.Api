@@ -5,7 +5,7 @@ namespace CarRent.Api.Services
 {
     public interface ICustomerService
     {
-        void AddCustomer(Customer customer);
+        long AddCustomer(Customer customer);
         void DeleteByCustomerId(long idCCustomer);
         List<Customer> ReadAllCustomer();
         Customer ReadCustomerById(long idCustomer);

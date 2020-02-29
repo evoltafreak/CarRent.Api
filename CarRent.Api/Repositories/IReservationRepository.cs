@@ -5,7 +5,7 @@ namespace CarRent.Api.Services
 {
     public interface IReservationRepository
     {
-        void AddReservation(Reservation reservation);
+        long AddReservation(Reservation reservation);
         void DeleteReservationById(long idReservation);
         List<Reservation> ReadAllReservation();
         Reservation ReadReservationById(long idReservation);

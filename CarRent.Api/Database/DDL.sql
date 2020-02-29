@@ -11,21 +11,24 @@ CREATE TABLE IF NOT EXISTS CARRENT.Place (
   place VARCHAR(200) NOT NULL,
   canton VARCHAR(200) NOT NULL,
   cantonAbb VARCHAR(2) NOT NULL,
-  PRIMARY KEY (idPlace)
+  CONSTRAINT pk_Place
+    PRIMARY KEY (idPlace)
 );
 
 -- CarType
 CREATE TABLE IF NOT EXISTS CARRENT.CarType (
   idCarType INT NOT NULL AUTO_INCREMENT,
   carType VARCHAR(200) NOT NULL,
-  PRIMARY KEY (idCarType)
+  CONSTRAINT pk_CarType
+    PRIMARY KEY (idCarType)
 );
 
 -- CarMake
 CREATE TABLE IF NOT EXISTS CARRENT.CarMake (
   idCarMake INT NOT NULL AUTO_INCREMENT,
   carMake VARCHAR(200) NOT NULL,
-  PRIMARY KEY (idCarMake)
+  CONSTRAINT pk_CarMake
+    PRIMARY KEY (idCarMake)
 );
 
 -- CarClass
@@ -33,7 +36,8 @@ CREATE TABLE IF NOT EXISTS CARRENT.CarClass (
   idCarClass INT NOT NULL AUTO_INCREMENT,
   carClass VARCHAR(200) NOT NULL,
   fee DECIMAL NOT NULL,
-  PRIMARY KEY (idCarClass)
+  CONSTRAINT pk_CarClass
+    PRIMARY KEY (idCarClass)
 );
 
 -- Car
@@ -44,7 +48,8 @@ CREATE TABLE IF NOT EXISTS CARRENT.Car (
   carNr VARCHAR(200) NOT NULL,
   fidCarType INT NOT NULL,
   fidCarClass INT NOT NULL,
-  PRIMARY KEY (idCar),
+  CONSTRAINT pk_Car
+    PRIMARY KEY (idCar),
   CONSTRAINT fk_Car_CarMake
     FOREIGN KEY (fidCarMake)
     REFERENCES CARRENT.CarMake (idCarMake),
@@ -64,7 +69,8 @@ CREATE TABLE IF NOT EXISTS CARRENT.Customer (
   address VARCHAR(200) NOT NULL,
   addressNr VARCHAR(10),
   fidPlace INT NOT NULL,
-  PRIMARY KEY (idCustomer),
+  CONSTRAINT fk_Customer
+    PRIMARY KEY (idCustomer),
   CONSTRAINT fk_Customer_Place
     FOREIGN KEY (fidPlace)
     REFERENCES CARRENT.Place (idPlace)
@@ -92,7 +98,8 @@ CREATE TABLE IF NOT EXISTS CARRENT.Reservation (
   isLease CHAR(2) NOT NULL,
   fidCustomer INT NOT NULL,
   fidCar INT NOT NULL,
-  PRIMARY KEY (idReservation),
+  CONSTRAINT fk_Reservation
+    PRIMARY KEY (idReservation),
   CONSTRAINT fk_Reservation_Customer
     FOREIGN KEY (fidCustomer)
     REFERENCES CARRENT.Customer (idCustomer),
