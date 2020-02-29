@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net;
 using CarRent.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using OpenAPI.Controllers;
@@ -39,7 +38,7 @@ namespace CarRent.Api.Controllers
         public override IActionResult ReadCustomerById(long idCustomer)
         {
             Customer customer = _customerService.ReadCustomerById(idCustomer);
-            return customer == null ? StatusCode(404, customer) : StatusCode(200, customer);
+            return customer == null ? StatusCode(404, null) : StatusCode(200, customer);
         }
 
         public override IActionResult UpdateCustomer(Customer customer)

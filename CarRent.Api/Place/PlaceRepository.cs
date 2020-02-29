@@ -9,11 +9,11 @@ namespace CarRent.Api.Repositories
     public class PlaceRepository: IPlaceRepository
     {
         
-        public MapperConfiguration placeConfig;
+        private MapperConfiguration _placeConfig;
 
         public PlaceRepository()
         {
-            placeConfig = new MapperConfiguration(cfg => { cfg.CreateMap<PlaceEntity, Place>(); });
+            _placeConfig = new MapperConfiguration(cfg => { cfg.CreateMap<PlaceEntity, Place>(); });
         }
 
         public List<Place> ReadAllPlaces()
@@ -24,7 +24,7 @@ namespace CarRent.Api.Repositories
                 placeList = context.PlaceEntity.ToList();
             }
             
-            IMapper mapper = placeConfig.CreateMapper();
+            IMapper mapper = _placeConfig.CreateMapper();
             return mapper.Map<List<PlaceEntity>, List<Place>>(placeList);
         }
 
@@ -35,7 +35,7 @@ namespace CarRent.Api.Repositories
             {
                 placeEntity = context.PlaceEntity.Where(c => c.IdPlace == idPlace).FirstOrDefault();
             }
-            IMapper mapper = placeConfig.CreateMapper();
+            IMapper mapper = _placeConfig.CreateMapper();
             return mapper.Map<PlaceEntity, Place>(placeEntity);
         }
 

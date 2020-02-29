@@ -9,17 +9,17 @@ namespace CarRent.Api.Repositories
 {
     public class ReservationRepository: IReservationRepository
     {
-        public MapperConfiguration reservationConfig;
-        public MapperConfiguration reservationConfig2;
+        private MapperConfiguration _reservationConfig;
+        private MapperConfiguration _reservationConfig2;
         public ReservationRepository()
         {
-            reservationConfig = new MapperConfiguration(cfg =>
+            _reservationConfig = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<ReservationEntity, Reservation>()
                     .ForPath(dest => dest.Customer.IdCustomer, act => act.MapFrom(src => src.FidCustomer))
                     .ForPath(dest => dest.Car.IdCar, act => act.MapFrom(src => src.FidCar));
             });
-            reservationConfig2 = new MapperConfiguration(cfg =>
+            _reservationConfig2 = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Reservation, ReservationEntity>()
                     .ForPath(dest => dest.FidCustomer, act => act.MapFrom(src => src.Customer.IdCustomer))
@@ -29,7 +29,7 @@ namespace CarRent.Api.Repositories
 
         public long AddReservation(Reservation reservation)
         {
-            IMapper mapper = reservationConfig2.CreateMapper();
+            IMapper mapper = _reservationConfig2.CreateMapper();
             ReservationEntity reservationEntity = new ReservationEntity();
             using (var context = new CarRentDbContext())
             {
@@ -58,7 +58,7 @@ namespace CarRent.Api.Repositories
                 reservationList = context.ReservationEntity.ToList();
             }
             
-            IMapper mapper = reservationConfig.CreateMapper();
+            IMapper mapper = _reservationConfig.CreateMapper();
             return mapper.Map<List<ReservationEntity>, List<Reservation>>(reservationList);
 
         }
@@ -70,13 +70,13 @@ namespace CarRent.Api.Repositories
             {
                 reservationEntity = context.ReservationEntity.Where(r => r.IdReservation == idReservation).FirstOrDefault();
             }
-            IMapper mapper = reservationConfig.CreateMapper();
+            IMapper mapper = _reservationConfig.CreateMapper();
             return mapper.Map<ReservationEntity, Reservation>(reservationEntity);
         }
 
         public long UpdateReservation(Reservation reservation)
         {
-            IMapper mapper = reservationConfig2.CreateMapper();
+            IMapper mapper = _reservationConfig2.CreateMapper();
             ReservationEntity reservationEntity = mapper.Map<Reservation, ReservationEntity>(reservation);
             using (var context = new CarRentDbContext())
             {

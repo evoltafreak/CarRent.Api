@@ -38,7 +38,7 @@ namespace CarRent.Api.Controllers
         public override IActionResult ReadReservationById(long idReservation)
         {
             Reservation reservation = _reservationService.ReadReservationById(idReservation);
-            return reservation == null ? StatusCode(404, reservation) : StatusCode(200, reservation);
+            return reservation == null ? StatusCode(404, null) : StatusCode(200, reservation);
         }
 
         public override IActionResult UpdateReservation(Reservation reservation)

@@ -9,37 +9,37 @@ namespace CarRent.Api.Repositories
     public class CarRepository: ICarRepository
     {
         
-        public MapperConfiguration carConfig;
-        public MapperConfiguration carConfig2;
-        public MapperConfiguration carTypeConfig;
-        public MapperConfiguration carMakeConfig;
-        public MapperConfiguration carClassConfig;
+        public MapperConfiguration _carConfig;
+        public MapperConfiguration _carConfig2;
+        public MapperConfiguration _carTypeConfig;
+        public MapperConfiguration _carMakeConfig;
+        public MapperConfiguration _carClassConfig;
 
         public CarRepository()
         {
-            carConfig = new MapperConfiguration(cfg =>
+            _carConfig = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<CarEntity, Car>()
                     .ForPath(dest => dest.CarType.IdCarType, act => act.MapFrom(src => src.FidCarType))
                     .ForPath(dest => dest.CarMake.IdCarMake, act => act.MapFrom(src => src.FidCarMake))
                     .ForPath(dest => dest.CarClass.IdCarClass, act => act.MapFrom(src => src.FidCarClass));
             });
-            carConfig2 = new MapperConfiguration(cfg =>
+            _carConfig2 = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Car, CarEntity>()
                     .ForPath(dest => dest.FidCarType, act => act.MapFrom(src => src.CarType.IdCarType))
                     .ForPath(dest => dest.FidCarMake, act => act.MapFrom(src => src.CarMake.IdCarMake))
                     .ForPath(dest => dest.FidCarClass, act => act.MapFrom(src => src.CarClass.IdCarClass));
             });
-            carTypeConfig = new MapperConfiguration(cfg => cfg.CreateMap<CarTypeEntity, CarType>());
-            carMakeConfig = new MapperConfiguration(cfg => cfg.CreateMap<CarMakeEntity, CarMake>());
-            carClassConfig = new MapperConfiguration(cfg => cfg.CreateMap<CarClassEntity, CarClass>());
+            _carTypeConfig = new MapperConfiguration(cfg => cfg.CreateMap<CarTypeEntity, CarType>());
+            _carMakeConfig = new MapperConfiguration(cfg => cfg.CreateMap<CarMakeEntity, CarMake>());
+            _carClassConfig = new MapperConfiguration(cfg => cfg.CreateMap<CarClassEntity, CarClass>());
             
             }
 
         public long AddCar(Car car)
         {
-            IMapper mapper = carConfig2.CreateMapper();
+            IMapper mapper = _carConfig2.CreateMapper();
             CarEntity carEntity = mapper.Map<Car, CarEntity>(car);
             using (var context = new CarRentDbContext())
             {
@@ -67,7 +67,7 @@ namespace CarRent.Api.Repositories
                 carList = context.CarEntity.ToList();
             }
             
-            IMapper mapper = carConfig.CreateMapper();
+            IMapper mapper = _carConfig.CreateMapper();
             return mapper.Map<List<CarEntity>, List<Car>>(carList);
         }
 
@@ -78,13 +78,13 @@ namespace CarRent.Api.Repositories
             {
                 carEntity = context.CarEntity.Where(c => c.IdCar == idCar).FirstOrDefault();
             }
-            IMapper mapper = carConfig.CreateMapper();
+            IMapper mapper = _carConfig.CreateMapper();
             return mapper.Map<CarEntity, Car>(carEntity);
         }
 
         public long UpdateCar(Car car)
         {
-            IMapper mapper = carConfig2.CreateMapper();
+            IMapper mapper = _carConfig2.CreateMapper();
             CarEntity carEntity = mapper.Map<Car, CarEntity>(car);
             using (var context = new CarRentDbContext())
             {
@@ -101,7 +101,7 @@ namespace CarRent.Api.Repositories
             {
                 carTypeEntity = context.CarTypeEntity.Where(c => c.IdCarType == idCarType).FirstOrDefault();
             }
-            IMapper mapper = carTypeConfig.CreateMapper();
+            IMapper mapper = _carTypeConfig.CreateMapper();
             return mapper.Map<CarTypeEntity, CarType>(carTypeEntity);
         }
 
@@ -112,7 +112,7 @@ namespace CarRent.Api.Repositories
             {
                 carTypeList = context.CarTypeEntity.ToList();
             }
-            IMapper mapper = carTypeConfig.CreateMapper();
+            IMapper mapper = _carTypeConfig.CreateMapper();
             return mapper.Map<List<CarTypeEntity>, List<CarType>>(carTypeList);
         }
         
@@ -123,7 +123,7 @@ namespace CarRent.Api.Repositories
             {
                 carMakeEntity = context.CarMakeEntity.Where(c => c.IdCarMake == idCarMake).FirstOrDefault();
             }
-            IMapper mapper = carMakeConfig.CreateMapper();
+            IMapper mapper = _carMakeConfig.CreateMapper();
             return mapper.Map<CarMakeEntity, CarMake>(carMakeEntity);
         }
 
@@ -134,7 +134,7 @@ namespace CarRent.Api.Repositories
             {
                 carMakeList = context.CarMakeEntity.ToList();
             }
-            IMapper mapper = carMakeConfig.CreateMapper();
+            IMapper mapper = _carMakeConfig.CreateMapper();
             return mapper.Map<List<CarMakeEntity>, List<CarMake>>(carMakeList);
         }
         
@@ -145,7 +145,7 @@ namespace CarRent.Api.Repositories
             {
                 carClassEntity = context.CarClassEntity.Where(c => c.IdCarClass == idCarClass).FirstOrDefault();
             }
-            IMapper mapper = carClassConfig.CreateMapper();
+            IMapper mapper = _carClassConfig.CreateMapper();
             return mapper.Map<CarClassEntity, CarClass>(carClassEntity);
         }
 
@@ -156,7 +156,7 @@ namespace CarRent.Api.Repositories
             {
                 carClassList = context.CarClassEntity.ToList();
             }
-            IMapper mapper = carClassConfig.CreateMapper();
+            IMapper mapper = _carClassConfig.CreateMapper();
             return mapper.Map<List<CarClassEntity>, List<CarClass>>(carClassList);
         }
         

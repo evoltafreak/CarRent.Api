@@ -54,7 +54,7 @@ namespace CarRent.Api.Controllers
         public override IActionResult ReadCarById(long idCar)
         {
             Car car = _carService.ReadCarById(idCar);
-            return car == null ? StatusCode(404, car) : StatusCode(200, car);
+            return car == null ? StatusCode(404, null) : StatusCode(200, car);
         }
 
         public override IActionResult UpdateCar(Car car)

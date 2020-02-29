@@ -11,7 +11,7 @@ namespace CarRent.Api.Services
 
         public CarService(ICarRepository carRepository)
         {
-            this._carRepository = carRepository;
+            _carRepository = carRepository;
         }
 
         public long AddCar(Car car)
