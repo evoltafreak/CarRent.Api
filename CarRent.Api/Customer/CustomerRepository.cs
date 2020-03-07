@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using CarRent.Api.EF;
+using CarRent.Api.Entities;
 using OpenAPI.Models;
 
 namespace CarRent.Api.Repositories
@@ -10,8 +10,10 @@ namespace CarRent.Api.Repositories
     {
         private MapperConfiguration _customerConfig;
         private MapperConfiguration _customerConfig2;
-        public CustomerRepository()
+        private CarRentDbContext dbCtx;
+        public CustomerRepository(CarRentDbContext dbCtx)
         {
+            this.dbCtx = dbCtx;
             _customerConfig = new MapperConfiguration(cfg => cfg.CreateMap<CustomerEntity, Customer>()
                 .ForPath(dest => dest.Place.IdPlace, act => act.MapFrom(src => src.FidPlace)));
             _customerConfig2 = new MapperConfiguration(cfg => cfg.CreateMap<Customer, CustomerEntity>()
@@ -22,32 +24,23 @@ namespace CarRent.Api.Repositories
         {
             IMapper mapper = _customerConfig2.CreateMapper();
             CustomerEntity customerEntity = mapper.Map<Customer, CustomerEntity>(customer);
-            using (var context = new CarRentDbContext())
-            {
-                context.CustomerEntity.Add(customerEntity);
-                context.SaveChanges();
-            }
+            dbCtx.CustomerEntity.Add(customerEntity);
+            dbCtx.SaveChanges();
             return customerEntity.IdCustomer;
         }
 
         public int DeleteCustomerById(long idCustomer)
         {
-            using (var context = new CarRentDbContext())
-            {
-                context.CustomerEntity.Remove(context.CustomerEntity.Single(c => c.IdCustomer == idCustomer));
-                return context.SaveChanges();
-            }
+            dbCtx.CustomerEntity.Remove(dbCtx.CustomerEntity.Single(c => c.IdCustomer == idCustomer));
+            return dbCtx.SaveChanges();
         }
 
 
         public List<Customer> ReadAllCustomer()
         {
             List<CustomerEntity> customerList = new List<CustomerEntity>();
-            using (var context = new CarRentDbContext())
-            {
-                customerList = context.CustomerEntity.ToList();
-            }
-            
+            customerList = dbCtx.CustomerEntity.ToList();
+
             IMapper mapper = _customerConfig.CreateMapper();
             List<Customer> customers = mapper.Map<List<CustomerEntity>, List<Customer>>(customerList);
             return customers;
@@ -56,11 +49,8 @@ namespace CarRent.Api.Repositories
         public Customer ReadCustomerById(long idCustomer)
         {
             CustomerEntity customerEntity = new CustomerEntity();
-            using (var context = new CarRentDbContext())
-            {
-                customerEntity = context.CustomerEntity.FirstOrDefault(c => c.IdCustomer == idCustomer);
-            }
-            
+            customerEntity = dbCtx.CustomerEntity.FirstOrDefault(c => c.IdCustomer == idCustomer);
+
             IMapper mapper = _customerConfig.CreateMapper();
             return mapper.Map<CustomerEntity, Customer>(customerEntity);
         }
@@ -69,12 +59,8 @@ namespace CarRent.Api.Repositories
         {
             IMapper mapper = _customerConfig2.CreateMapper();
             CustomerEntity customerEntity = mapper.Map<Customer, CustomerEntity>(customer);
-            using (var context = new CarRentDbContext())
-            {
-                context.CustomerEntity.Update(customerEntity);
-                context.SaveChanges();
-            }
-
+            dbCtx.CustomerEntity.Update(customerEntity);
+            dbCtx.SaveChanges();
             return customerEntity.IdCustomer;
         }
 

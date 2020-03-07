@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using CarRent.Api.EF;
+using CarRent.Api.Entities;
 using CarRent.Api.Services;
 using OpenAPI.Models;
 
@@ -11,8 +11,10 @@ namespace CarRent.Api.Repositories
     {
         private MapperConfiguration _reservationConfig;
         private MapperConfiguration _reservationConfig2;
-        public ReservationRepository()
+        private CarRentDbContext dbCtx;
+        public ReservationRepository(CarRentDbContext dbCtx)
         {
+            this.dbCtx = dbCtx;
             _reservationConfig = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<ReservationEntity, Reservation>()
@@ -31,33 +33,25 @@ namespace CarRent.Api.Repositories
         {
             IMapper mapper = _reservationConfig2.CreateMapper();
             ReservationEntity reservationEntity = new ReservationEntity();
-            using (var context = new CarRentDbContext())
-            {
-                reservationEntity = mapper.Map<Reservation, ReservationEntity>(reservation);
-                context.ReservationEntity.Add(reservationEntity);
-                context.SaveChanges();
-            }
+            reservationEntity = mapper.Map<Reservation, ReservationEntity>(reservation);
+            dbCtx.ReservationEntity.Add(reservationEntity);
+            dbCtx.SaveChanges();
             return reservationEntity.IdReservation;
         }
 
         public int DeleteReservationById(long idReservation)
         {
-            using (var context = new CarRentDbContext())
-            {
-                context.ReservationEntity.Remove(context.ReservationEntity.Single(r => r.IdReservation == idReservation));
-                return context.SaveChanges();
-            }
+
+            dbCtx.ReservationEntity.Remove(dbCtx.ReservationEntity.Single(r => r.IdReservation == idReservation));
+            return dbCtx.SaveChanges();
         }
 
 
         public List<Reservation> ReadAllReservation()
         {
             List<ReservationEntity> reservationList = new List<ReservationEntity>();
-            using (var context = new CarRentDbContext())
-            {
-                reservationList = context.ReservationEntity.ToList();
-            }
-            
+            reservationList = dbCtx.ReservationEntity.ToList();
+
             IMapper mapper = _reservationConfig.CreateMapper();
             return mapper.Map<List<ReservationEntity>, List<Reservation>>(reservationList);
 
@@ -66,10 +60,8 @@ namespace CarRent.Api.Repositories
         public Reservation ReadReservationById(long idReservation)
         {
             ReservationEntity reservationEntity = new ReservationEntity();
-            using (var context = new CarRentDbContext())
-            {
-                reservationEntity = context.ReservationEntity.Where(r => r.IdReservation == idReservation).FirstOrDefault();
-            }
+            reservationEntity = dbCtx.ReservationEntity.Where(r => r.IdReservation == idReservation).FirstOrDefault();
+
             IMapper mapper = _reservationConfig.CreateMapper();
             return mapper.Map<ReservationEntity, Reservation>(reservationEntity);
         }
@@ -78,12 +70,9 @@ namespace CarRent.Api.Repositories
         {
             IMapper mapper = _reservationConfig2.CreateMapper();
             ReservationEntity reservationEntity = mapper.Map<Reservation, ReservationEntity>(reservation);
-            using (var context = new CarRentDbContext())
-            {
-                context.ReservationEntity.Update(reservationEntity);
-                context.SaveChanges();
-            }
 
+            dbCtx.ReservationEntity.Update(reservationEntity);
+            dbCtx.SaveChanges();
             return reservationEntity.IdReservation;
         }
 

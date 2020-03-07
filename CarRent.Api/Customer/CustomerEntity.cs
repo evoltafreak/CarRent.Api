@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CarRent.Api.EF
+namespace CarRent.Api.Entities
 {
     [Table("customer")]
     public class CustomerEntity

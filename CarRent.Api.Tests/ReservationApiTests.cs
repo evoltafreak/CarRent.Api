@@ -14,7 +14,7 @@ namespace CarRent.Api.IntegrationTests
     public class ReservationApiTests : IntegrationTests
     {
 
-        [Test]
+        [Test, Order(1)]
         public async Task TestAddReservation()
         {
             // Arrange
@@ -23,52 +23,31 @@ namespace CarRent.Api.IntegrationTests
             // Act
             var response = await TestClient.PutAsync(BaseUrl + "/reservation", putContent);
             HttpStatusCode httpStatusCode = response.StatusCode;
-            var content = response.Content.ReadAsStringAsync();
+            var idReservation = await response.Content.ReadAsAsync<long>();
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
-            Assert.NotNull(content);
+            Assert.NotNull(idReservation);
+            Assert.IsTrue(idReservation > 0);
         }
 
-        [Test]
-        public async Task TestDeleteReservationById()
-        {
-            // Arrange
-            // Act
-            var response = await TestClient.DeleteAsync(BaseUrl + "/reservation/1");
-            HttpStatusCode httpStatusCode = response.StatusCode;
-            var content = await response.Content.ReadAsStringAsync();
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
-            Assert.NotNull(content);
-        }
-        
-        [Test]
-        public async Task TestReadAllReservations()
-        {
-            // Arrange
-            // Act
-            var response = await TestClient.GetAsync(BaseUrl + "/reservation");
-            HttpStatusCode httpStatusCode = response.StatusCode;
-            var content = await response.Content.ReadAsAsync<List<Reservation>>();
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
-            Assert.NotNull(content[0].ReservationNr);
-        }
-        
-        [Test]
+        [Test, Order(2)]
         public async Task TestReadReservationById()
         {
             // Arrange
             // Act
             var response = await TestClient.GetAsync(BaseUrl + "/reservation/1");
             HttpStatusCode httpStatusCode = response.StatusCode;
-            var content = await response.Content.ReadAsAsync<Reservation>();
+            var reservation = await response.Content.ReadAsAsync<Reservation>();
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
-            Assert.AreEqual("45FKDF", content.ReservationNr);
+            Assert.NotNull(reservation);
+            Assert.AreEqual(10, reservation.Days);
+            Assert.AreEqual(1000, reservation.Price);
+            Assert.AreEqual("XYZ123", reservation.ReservationNr);
+            Assert.AreEqual(true, reservation.IsLease);
         }
         
-        [Test]
+        [Test, Order(3)]
         public async Task TestUpdateReservation()
         {
             // Arrange
@@ -78,12 +57,45 @@ namespace CarRent.Api.IntegrationTests
             // Act
             var response = await TestClient.PostAsync(BaseUrl + "/reservation", postContent);
             HttpStatusCode httpStatusCode = response.StatusCode;
-            var content = await response.Content.ReadAsStringAsync();
+            var idReservation = await response.Content.ReadAsAsync<long>();
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
-            Assert.NotNull(content);
+            Assert.NotNull(idReservation);
+            Assert.IsTrue(idReservation > 0);
         }
-
+        
+        [Test, Order(4)]
+        public async Task TestReadAllReservations()
+        {
+            // Arrange
+            // Act
+            var response = await TestClient.GetAsync(BaseUrl + "/reservation");
+            HttpStatusCode httpStatusCode = response.StatusCode;
+            var reservationList = await response.Content.ReadAsAsync<List<Reservation>>();
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
+            Assert.IsNotNull(reservationList);
+            Assert.IsTrue(reservationList.Count > 0);
+            Assert.AreEqual(10, reservationList[0].Days);
+            Assert.AreEqual(1000, reservationList[0].Price);
+            Assert.AreEqual("XYZ123", reservationList[0].ReservationNr);
+            Assert.AreEqual(true, reservationList[0].IsLease);
+        }
+        
+        [Test, Order(5)]
+        public async Task TestDeleteReservationById()
+        {
+            // Arrange
+            // Act
+            var response = await TestClient.DeleteAsync(BaseUrl + "/reservation/1");
+            HttpStatusCode httpStatusCode = response.StatusCode;
+            var deleted = await response.Content.ReadAsAsync<int>();
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
+            Assert.NotNull(deleted);
+            Assert.AreEqual(1, deleted);
+        }
+        
         private Reservation mockReservation()
         {
             return new Reservation

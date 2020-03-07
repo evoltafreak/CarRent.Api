@@ -13,20 +13,7 @@ namespace CarRent.Api.IntegrationTests
     public class CarApiTests : IntegrationTests
     {
 
-        [Test]
-        public async Task TestReadAllCars()
-        {
-            // Arrange
-            // Act
-            var response = await TestClient.GetAsync(BaseUrl + "/car");
-            HttpStatusCode httpStatusCode = response.StatusCode;
-            var content = await response.Content.ReadAsAsync<List<Car>>();
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
-            Assert.AreEqual("Colt", content[0].CarName);
-        }
-        
-        [Test]
+        [Test, Order(1)]
         public async Task TestAddCar()
         {
             // Arrange
@@ -35,94 +22,117 @@ namespace CarRent.Api.IntegrationTests
             // Act
             var response = await TestClient.PutAsync(BaseUrl + "/car", putContent);
             HttpStatusCode httpStatusCode = response.StatusCode;
-            var content = response.Content.ReadAsStringAsync();
+            var idCar = await response.Content.ReadAsAsync<long>();
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
-            Assert.NotNull(content);
+            Assert.NotNull(idCar);
+            Assert.IsTrue(idCar > 0);
         }
-
-        [Test]
-        public async Task TestDeleteCarById()
-        {
-            // Arrange
-            // Act
-            var response = await TestClient.DeleteAsync(BaseUrl + "/car/1");
-            HttpStatusCode httpStatusCode = response.StatusCode;
-            var content = response.Content.ReadAsStringAsync();
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
-            Assert.NotNull(content);
-        }
-
-        [Test]
+        
+        [Test, Order(2)]
         public async Task TestReadCarById()
         {
             // Arrange
             // Act
             var response = await TestClient.GetAsync(BaseUrl + "/car/1");
             HttpStatusCode httpStatusCode = response.StatusCode;
-            var content = await response.Content.ReadAsAsync<Car>();
+            var car = await response.Content.ReadAsAsync<Car>();
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
-            Assert.AreEqual("Colt", content.CarName);
+            Assert.NotNull(car);
+            Assert.AreEqual("Colt", car.CarName);
+            Assert.AreEqual("XYZ", car.CarNr);
         }
         
-        [Test]
+        [Test, Order(3)]
         public async Task TestUpdateCar()
         {
             // Arrange
             Car car = mockCar();
+            car.CarName = "ASX";
             car.IdCar = 1;
             var postContent = new StringContent(JsonConvert.SerializeObject(car), Encoding.UTF8, "application/json");
             // Act
             var response = await TestClient.PostAsync(BaseUrl + "/car", postContent);
             HttpStatusCode httpStatusCode = response.StatusCode;
-            var content = response.Content.ReadAsStringAsync();
+            var idCar = response.Content.ReadAsStringAsync();
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
-            Assert.NotNull(content);
+            Assert.NotNull(idCar);
+            //Assert.IsTrue(idCar > 0);
+        }
+        
+        [Test, Order(4)]
+        public async Task TestReadAllCars()
+        {
+            // Arrange
+            // Act
+            var response = await TestClient.GetAsync(BaseUrl + "/car");
+            HttpStatusCode httpStatusCode = response.StatusCode;
+            var carList = await response.Content.ReadAsAsync<List<Car>>();
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
+            Assert.IsNotNull(carList);
+            Assert.IsTrue(carList.Count > 0);
+            Assert.AreEqual("ASX", carList[0].CarName);
+            Assert.AreEqual("XYZ", carList[0].CarNr);
+        }
+        
+
+        [Test, Order(5)]
+        public async Task TestDeleteCarById()
+        {
+            // Arrange
+            // Act
+            var response = await TestClient.DeleteAsync(BaseUrl + "/car/1");
+            HttpStatusCode httpStatusCode = response.StatusCode;
+            var deleted = await response.Content.ReadAsAsync<long>();
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
+            Assert.IsNotNull(deleted);
+            Assert.AreEqual(1, deleted);
         }
 
-        [Test]
+        [Test, Order(6)]
         public async Task TestReadAllCarTypes()
         {
             // Arrange
             // Act
             var response = await TestClient.GetAsync(BaseUrl + "/car/carType");
             HttpStatusCode httpStatusCode = response.StatusCode;
-            var content = await response.Content.ReadAsAsync<List<CarType>>();
+            var carTypeList = await response.Content.ReadAsAsync<List<CarType>>();
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
-            Assert.IsTrue(content.Count > 0);
-            Assert.AreEqual("Limousine", content[0]._CarType);
+            Assert.IsTrue(carTypeList.Count > 0);
+            Assert.AreEqual("Limousine", carTypeList[0]._CarType);
         }
         
-        [Test]
+        [Test, Order(7)]
         public async Task TestReadAllCarMakes()
         {
             // Arrange
             // Act
             var response = await TestClient.GetAsync(BaseUrl + "/car/carMake");
             HttpStatusCode httpStatusCode = response.StatusCode;
-            var content = await response.Content.ReadAsAsync<List<CarMake>>();
+            var carMakeList = await response.Content.ReadAsAsync<List<CarMake>>();
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
-            Assert.IsTrue(content.Count > 0);
-            Assert.AreEqual("Mitsubishi", content[0]._CarMake);
+            Assert.IsTrue(carMakeList.Count > 0);
+            Assert.AreEqual("Mitsubishi", carMakeList[0]._CarMake);
         }
         
-        [Test]
-        public async Task TestReadAllClasses()
+        [Test, Order(8)]
+        public async Task TestReadAllCarClasses()
         {
             // Arrange
             // Act
             var response = await TestClient.GetAsync(BaseUrl + "/car/carClass");
             HttpStatusCode httpStatusCode = response.StatusCode;
-            var content = await response.Content.ReadAsAsync<List<CarClass>>();
+            var carClassList = await response.Content.ReadAsAsync<List<CarClass>>();
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, httpStatusCode);
-            Assert.IsTrue(content.Count > 0);
-            Assert.AreEqual("Luxusklasse", content[0]._CarClass);
+            Assert.IsTrue(carClassList.Count > 0);
+            Assert.AreEqual("Luxusklasse", carClassList[0]._CarClass);
         }
         
         private Car mockCar()

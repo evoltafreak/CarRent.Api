@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using CarRent.Api.EF;
+using CarRent.Api.Entities;
 using OpenAPI.Models;
 
 namespace CarRent.Api.Repositories
@@ -10,20 +10,19 @@ namespace CarRent.Api.Repositories
     {
         
         private MapperConfiguration _placeConfig;
+        private CarRentDbContext dbCtx;
 
-        public PlaceRepository()
+        public PlaceRepository(CarRentDbContext dbCtx)
         {
+            this.dbCtx = dbCtx;
             _placeConfig = new MapperConfiguration(cfg => { cfg.CreateMap<PlaceEntity, Place>(); });
         }
 
         public List<Place> ReadAllPlaces()
         {
             List<PlaceEntity> placeList = new List<PlaceEntity>();
-            using (var context = new CarRentDbContext())
-            {
-                placeList = context.PlaceEntity.ToList();
-            }
-            
+            placeList = dbCtx.PlaceEntity.ToList();
+
             IMapper mapper = _placeConfig.CreateMapper();
             return mapper.Map<List<PlaceEntity>, List<Place>>(placeList);
         }
@@ -31,10 +30,8 @@ namespace CarRent.Api.Repositories
         public Place ReadPlaceById(long idPlace)
         {
             PlaceEntity placeEntity = new PlaceEntity();
-            using (var context = new CarRentDbContext())
-            {
-                placeEntity = context.PlaceEntity.Where(c => c.IdPlace == idPlace).FirstOrDefault();
-            }
+            placeEntity = dbCtx.PlaceEntity.Where(c => c.IdPlace == idPlace).FirstOrDefault();
+
             IMapper mapper = _placeConfig.CreateMapper();
             return mapper.Map<PlaceEntity, Place>(placeEntity);
         }

@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using CarRent.Api.EF;
+using CarRent.Api.Entities;
 using OpenAPI.Models;
 
 namespace CarRent.Api.Repositories
@@ -9,14 +10,16 @@ namespace CarRent.Api.Repositories
     public class CarRepository: ICarRepository
     {
         
-        public MapperConfiguration _carConfig;
-        public MapperConfiguration _carConfig2;
-        public MapperConfiguration _carTypeConfig;
-        public MapperConfiguration _carMakeConfig;
-        public MapperConfiguration _carClassConfig;
+        private MapperConfiguration _carConfig;
+        private MapperConfiguration _carConfig2;
+        private MapperConfiguration _carTypeConfig;
+        private MapperConfiguration _carMakeConfig;
+        private MapperConfiguration _carClassConfig;
+        private CarRentDbContext dbCtx;
 
-        public CarRepository()
+        public CarRepository(CarRentDbContext dbCtx)
         {
+            this.dbCtx = dbCtx;
             _carConfig = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<CarEntity, Car>()
@@ -41,32 +44,23 @@ namespace CarRent.Api.Repositories
         {
             IMapper mapper = _carConfig2.CreateMapper();
             CarEntity carEntity = mapper.Map<Car, CarEntity>(car);
-            using (var context = new CarRentDbContext())
-            {
-                context.CarEntity.Add(carEntity);
-                context.SaveChanges();
-            }
+            dbCtx.CarEntity.Add(carEntity);
+            dbCtx.SaveChanges();
             return carEntity.IdCar;
         }
 
         public int DeleteCarById(long idCar)
         {
-            using (var context = new CarRentDbContext())
-            {
-                context.CarEntity.Remove(context.CarEntity.Single(c => c.IdCar == idCar));
-                return context.SaveChanges();
-            }
+            dbCtx.CarEntity.Remove(dbCtx.CarEntity.Single(c => c.IdCar == idCar));
+            return dbCtx.SaveChanges();
         }
 
 
         public List<Car> ReadAllCars()
         {
             List<CarEntity> carList = new List<CarEntity>();
-            using (var context = new CarRentDbContext())
-            {
-                carList = context.CarEntity.ToList();
-            }
-            
+            carList = dbCtx.CarEntity.ToList();
+
             IMapper mapper = _carConfig.CreateMapper();
             return mapper.Map<List<CarEntity>, List<Car>>(carList);
         }
@@ -74,10 +68,8 @@ namespace CarRent.Api.Repositories
         public Car ReadCarById(long idCar)
         {
             CarEntity carEntity = new CarEntity();
-            using (var context = new CarRentDbContext())
-            {
-                carEntity = context.CarEntity.Where(c => c.IdCar == idCar).FirstOrDefault();
-            }
+            carEntity = dbCtx.CarEntity.Where(c => c.IdCar == idCar).FirstOrDefault();
+
             IMapper mapper = _carConfig.CreateMapper();
             return mapper.Map<CarEntity, Car>(carEntity);
         }
@@ -86,21 +78,15 @@ namespace CarRent.Api.Repositories
         {
             IMapper mapper = _carConfig2.CreateMapper();
             CarEntity carEntity = mapper.Map<Car, CarEntity>(car);
-            using (var context = new CarRentDbContext())
-            {
-                context.CarEntity.Update(carEntity);
-                context.SaveChanges();
-            }
+            dbCtx.CarEntity.Update(carEntity);
+            dbCtx.SaveChanges();
             return carEntity.IdCar;
         }
         
         public CarType ReadCarTypeById(long idCarType)
         {
             CarTypeEntity carTypeEntity = new CarTypeEntity();
-            using (var context = new CarRentDbContext())
-            {
-                carTypeEntity = context.CarTypeEntity.Where(c => c.IdCarType == idCarType).FirstOrDefault();
-            }
+            carTypeEntity = dbCtx.CarTypeEntity.Where(c => c.IdCarType == idCarType).FirstOrDefault();
             IMapper mapper = _carTypeConfig.CreateMapper();
             return mapper.Map<CarTypeEntity, CarType>(carTypeEntity);
         }
@@ -108,10 +94,7 @@ namespace CarRent.Api.Repositories
         public List<CarType> ReadAllCarTypes()
         {
             List<CarTypeEntity> carTypeList = new List<CarTypeEntity>();
-            using (var context = new CarRentDbContext())
-            {
-                carTypeList = context.CarTypeEntity.ToList();
-            }
+            carTypeList = dbCtx.CarTypeEntity.ToList();
             IMapper mapper = _carTypeConfig.CreateMapper();
             return mapper.Map<List<CarTypeEntity>, List<CarType>>(carTypeList);
         }
@@ -119,10 +102,7 @@ namespace CarRent.Api.Repositories
         public CarMake ReadCarMakeById(long idCarMake)
         {
             CarMakeEntity carMakeEntity = new CarMakeEntity();
-            using (var context = new CarRentDbContext())
-            {
-                carMakeEntity = context.CarMakeEntity.Where(c => c.IdCarMake == idCarMake).FirstOrDefault();
-            }
+            carMakeEntity = dbCtx.CarMakeEntity.Where(c => c.IdCarMake == idCarMake).FirstOrDefault();
             IMapper mapper = _carMakeConfig.CreateMapper();
             return mapper.Map<CarMakeEntity, CarMake>(carMakeEntity);
         }
@@ -130,10 +110,7 @@ namespace CarRent.Api.Repositories
         public List<CarMake> ReadAllCarMakes()
         {
             List<CarMakeEntity> carMakeList = new List<CarMakeEntity>();
-            using (var context = new CarRentDbContext())
-            {
-                carMakeList = context.CarMakeEntity.ToList();
-            }
+            carMakeList = dbCtx.CarMakeEntity.ToList();
             IMapper mapper = _carMakeConfig.CreateMapper();
             return mapper.Map<List<CarMakeEntity>, List<CarMake>>(carMakeList);
         }
@@ -141,10 +118,7 @@ namespace CarRent.Api.Repositories
         public CarClass ReadCarClassById(long idCarClass)
         {
             CarClassEntity carClassEntity = new CarClassEntity();
-            using (var context = new CarRentDbContext())
-            {
-                carClassEntity = context.CarClassEntity.Where(c => c.IdCarClass == idCarClass).FirstOrDefault();
-            }
+            carClassEntity = dbCtx.CarClassEntity.Where(c => c.IdCarClass == idCarClass).FirstOrDefault();
             IMapper mapper = _carClassConfig.CreateMapper();
             return mapper.Map<CarClassEntity, CarClass>(carClassEntity);
         }
@@ -152,10 +126,7 @@ namespace CarRent.Api.Repositories
         public List<CarClass> ReadAllCarClasses()
         {
             List<CarClassEntity> carClassList = new List<CarClassEntity>();
-            using (var context = new CarRentDbContext())
-            {
-                carClassList = context.CarClassEntity.ToList();
-            }
+            carClassList = dbCtx.CarClassEntity.ToList();
             IMapper mapper = _carClassConfig.CreateMapper();
             return mapper.Map<List<CarClassEntity>, List<CarClass>>(carClassList);
         }

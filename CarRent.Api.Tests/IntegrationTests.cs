@@ -1,4 +1,5 @@
 using System.Net.Http;
+using CarRent.Api.Entities;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,8 +18,8 @@ namespace CarRent.Api.IntegrationTests
             var appFactory = new WebApplicationFactory<Startup>()
                 .WithWebHostBuilder(builder => { builder.ConfigureServices(services =>
                     {
-                        services.RemoveAll(typeof(DbContext));
-                        services.AddDbContext<DbContext>(options => { options.UseInMemoryDatabase("TestDb"); });
+                        services.RemoveAll(typeof(CarRentDbContext));
+                        services.AddDbContext<CarRentDbContext>(options => { options.UseInMemoryDatabase("TestDb").UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking); });
                     });
                 });
             TestClient = appFactory.CreateClient();

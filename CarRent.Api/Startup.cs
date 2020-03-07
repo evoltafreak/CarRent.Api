@@ -1,9 +1,11 @@
-﻿using CarRent.Api.EF;
+﻿using System;
+using CarRent.Api.Entities;
 using CarRent.Api.Repositories;
 using CarRent.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,7 +32,7 @@ namespace CarRent.Api
             services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddTransient<IReservationRepository, ReservationRepository>();
             services.AddTransient<IPlaceRepository, PlaceRepository>();
-            services.AddDbContext<CarRentDbContext>();
+            services.AddDbContext<CarRentDbContext>(options => options.UseMySQL(Configuration["ConnectionStrings:DefaultConnection"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
