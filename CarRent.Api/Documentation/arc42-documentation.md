@@ -52,24 +52,24 @@ Stakeholder
 
 Randbedingungen
 ===============
-###Developer Tools
+### Developer Tools
 * JetBrains Rider
 * JetBrains WebStorm
 * MySql Workbench
 
-###Frontend
+### Frontend
 * Angular
 * Angular Flex-Layout
 * Angular Material
 
-###API
+### API
 * .NET Core 2.2
 * EntityFramework
 
-###Testing
+### Testing
 * NUnit
 
-###Database
+### Database
 * MySQL 8.0.16             
 
 Kontextabgrenzung
