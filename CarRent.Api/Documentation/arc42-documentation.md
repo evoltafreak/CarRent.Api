@@ -1,5 +1,4 @@
-Autovermietungssystem Car-Rent
-======================
+# Autovermietungssystem Car-Rent
 
 Diese Dokumentation wurde auf der Grundlage von arc 42 erstellt.
 
@@ -16,11 +15,9 @@ Template Revision: 7.0 DE (asciidoc-based), January 2017
 architecture template, <http://www.arc42.de>. Created by Dr. Peter
 Hruschka & Dr. Gernot Starke.
 
-Einführung und Ziele
-====================
+## Einführung und Ziele
 
-Aufgabenstellung
-----------------
+### Aufgabenstellung
 Es soll ein neues Autovermietungssystem „CarRent“ erstellt werden. Das System soll aus einem Server-Teil und
 optional einen Web-Client bestehen.
 1. Die Daten sollen mittels Repository Pattern in eine Datenbank gespeichert werden können.
@@ -30,8 +27,7 @@ werden.
 Optional:
 4. Der Web-Client benutzt die REST API um die Funktionen auszuführen.
 
-Qualitätsziele
---------------
+### Qualitätsziele
 * Performance
 * Datenqualität
 * Benutzerfreundlichkeit
@@ -40,18 +36,15 @@ Qualitätsziele
 * Wartbarkeit
 * Stabilität
 
-Stakeholder
------------
-
+### Stakeholder
 | Rolle | Name| Erwartungshaltung |
 | :--- | :----: | ---: |
 | Sacharbeiter | John Mega | Performance, Benutzerfreundlichkeit |
 | Kunde | Andrea Super | Performance, Benutzerfreundlichkeit |
-| Owner | John Top | Stabilität, Datenqualität |
+| Owner | Tim Top | Stabilität, Datenqualität |
 | Entwickler | Evoltafreak | Installierbarkeit, Wartbarkeit, Erweiterbarkeit |
 
-Randbedingungen
-===============
+## Randbedingungen
 ### Developer Tools
 * JetBrains Rider
 * JetBrains WebStorm
@@ -72,21 +65,18 @@ Randbedingungen
 ### Database
 * MySQL 8.0.16             
 
-Kontextabgrenzung
-=================
-
-Fachlicher Kontext
-------------------
+## Kontextabgrenzung
+###Fachlicher Kontext
 ![alt text](./Images/CarRent_ContextDiagram.png "ContextDiagram")
 
-Technischer Kontext
--------------------
+### Technischer Kontext
 ![alt text](./Images/CarRent_ComponentDiagram.png "ComponentDiagram")
 
-Domain Model
-=============
+## Domain Model
 ![alt text](./Images/CarRent_DomainModel.png "DomainModel")
 
-Klassendiagramm
-=============
+## Deployment Diagram
+![alt text](./Images/CarRent_DeploymentDiagram.png "DeploymentDiagram")
+
+##Klassendiagramm
 ![alt text](./Images/CarRent_ClassDiagram.png "ClassDiagram")
