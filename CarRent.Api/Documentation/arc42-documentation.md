@@ -66,7 +66,7 @@ Optional:
 * MySQL 8.0.16             
 
 ## Kontextabgrenzung
-###Fachlicher Kontext
+### Fachlicher Kontext
 ![alt text](./Images/CarRent_ContextDiagram.png "ContextDiagram")
 
 ### Technischer Kontext
@@ -78,5 +78,5 @@ Optional:
 ## Deployment Diagram
 ![alt text](./Images/CarRent_DeploymentDiagram.png "DeploymentDiagram")
 
-##Klassendiagramm
+## Klassendiagramm
 ![alt text](./Images/CarRent_ClassDiagram.png "ClassDiagram")
