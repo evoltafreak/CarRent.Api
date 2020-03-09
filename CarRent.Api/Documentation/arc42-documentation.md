@@ -58,6 +58,7 @@ Optional:
 ### API
 * .NET Core 2.2
 * EntityFramework
+* OpenAPI 3.0
 
 ### Testing
 * NUnit
