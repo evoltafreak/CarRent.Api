@@ -1,0 +1,15 @@
+Name: Kunden verwalten
+Actors: Sachbearbeiter
+Description: Sachbearbeiter kann Kunden verwalten (Erfassen, bearbeiten, löschen und suchen).
+
+Name: Autos verwalten
+Actors: Sachbearbeiter
+Description: Sachbearbeiter kann Autos verwalten (Erfassen, bearbeiten, löschen und suchen).
+
+Name: Reservationen verwalten
+Actors: Sachbearbeiter
+Description: Sachbearbeiter kann Reservationen verwalten (Erfassen, bearbeiten, löschen und suchen).
+
+Name: Auto reservieren
+Actors: Kunde
+Description: Kunde kann Auto auswählen und reservieren.
